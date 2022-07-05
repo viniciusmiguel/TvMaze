@@ -29,7 +29,7 @@ public class Startup
             });
         });
 
-        NativeInjector.InjectServicesForApi(services);
+        NativeInjector.InjectServicesForApi(services, Configuration["SqlConnectionString"]);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

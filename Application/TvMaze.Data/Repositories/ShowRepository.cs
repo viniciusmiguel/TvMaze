@@ -1,5 +1,5 @@
-﻿using System;
-using TvMaze.Core.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TvMaze.Data.Contexts;
 using TvMaze.Domain.Entities;
 using TvMaze.Domain.Repositories;
 
@@ -7,38 +7,61 @@ namespace TvMaze.Data.Repositories;
 
 public class ShowRepository : IShowRepository
 {
-	public ShowRepository()
+    private readonly ShowContext _showContext;
+	public ShowRepository(ShowContext context)
 	{
+        _showContext = context;
 	}
 
-    public Task<Guid> Add(Show show)
+    public async Task<Guid> Add(Show show)
     {
-        throw new NotImplementedException();
+        var s = await _showContext.AddAsync(show);
+        await _showContext.SaveChangesAsync();
+        return s.Entity.Id;
     }
 
-    public Task<Guid> AddActor(Actor actor)
+    public async Task<Guid> AddActor(Actor actor)
     {
-        throw new NotImplementedException();
+        var a = await _showContext.Actors.AddAsync(actor);
+        await _showContext.SaveChangesAsync();
+        return a.Entity.Id;
     }
+
+    public async Task<Actor?> GetActorByShowIdAndActorName(Guid showDomainId, string actorName)
+    {
+        return await _showContext.Actors
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(a =>
+                                a.ShowId.Equals(showDomainId) &&
+                                a.Name.Equals(actorName, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    public async Task<IEnumerable<Show>> GetAll()
+    {
+        var shows = await _showContext.Shows
+                        .AsNoTracking()
+                        .Include(show => show.Cast)
+                        .ToListAsync();
+
+        return shows; 
+    }
+
+    public async Task<Show?> GetShowByName(string name)
+    {
+        var result = await _showContext
+            .Shows
+            .AsNoTracking()
+            .Where(s => s.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+            .Include(s => s.Cast)
+            .FirstOrDefaultAsync();
+
+        return result;
+    }
+
 
     public void Dispose()
     {
-        
-    }
-
-    public Task<Actor> GetActorByShowIdAndActorName(Guid showDomainId, string actorName)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<Show>> GetAll()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Show> GetShowByName(string name)
-    {
-        throw new NotImplementedException();
+        _showContext.Dispose();
     }
 }
 

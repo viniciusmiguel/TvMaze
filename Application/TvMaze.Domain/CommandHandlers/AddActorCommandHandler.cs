@@ -6,6 +6,7 @@ namespace TvMaze.Domain.CommandHandlers
 	{
 		public AddActorCommandHandler()
 		{
+
 		}
 
         public async Task<bool> Handle(AddActorCommand request, CancellationToken cancellationToken)

@@ -13,10 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="TVMaze.Api" />
+    <None Remove="TvMaze.Api" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="TVMaze.Api">
+    <ProjectReference Include="TvMaze.Api">
       <ReferenceSourceTarget></ReferenceSourceTarget>
     </ProjectReference>
   </ItemGroup>
