@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Messages\" />
+    <None Remove="Messages\DomainMessages\" />
+    <None Remove="MediatR" />
+    <None Remove="FluentValidation" />
+    <None Remove="Data\" />
+    <None Remove="TvMaze.Domain\obj\Debug\net6.0\TvMaze.Domain.csproj.AssemblyReference.cache" />
+    <None Remove="TvMaze.Domain\obj\TvMaze.Domain.csproj.nuget.g.props" />
+    <None Remove="TvMaze.Domain\obj\TvMaze.Domain.csproj.nuget.g.targets" />
+    <None Remove="TvMaze.Domain\obj\project.assets.json" />
+    <None Remove="TvMaze.Domain\obj\project.nuget.cache" />
+    <None Remove="TvMaze.Domain\obj\TvMaze.Domain.csproj.nuget.dgspec.json" />
+    <None Remove="TvMaze.Domain\obj\Debug\net6.0\TvMaze.Domain.assets.cache" />
+    <None Remove="TvMaze.Domain\obj\Debug\net6.0\TvMaze.Domain.GeneratedMSBuildEditorConfig.editorconfig" />
+    <None Remove="TvMaze.Domain\obj\Debug\net6.0\TvMaze.Domain.AssemblyInfoInputs.cache" />
+    <None Remove="Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Messages\" />
+    <Folder Include="Messages\DomainMessages\" />
+    <Folder Include="Data\" />
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="FluentValidation" Version="11.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="TvMaze.Domain\obj\Debug\net6.0\.NETCoreApp,Version=v6.0.AssemblyAttributes.cs" />
+    <Compile Remove="TvMaze.Domain\Entities\Show.cs" />
+    <Compile Remove="TvMaze.Domain\globalusings.cs" />
+    <Compile Remove="TvMaze.Domain\Entities\Actor.cs" />
+    <Compile Remove="TvMaze.Domain\obj\Debug\net6.0\TvMaze.Domain.GlobalUsings.g.cs" />
+    <Compile Remove="TvMaze.Domain\obj\Debug\net6.0\TvMaze.Domain.AssemblyInfo.cs" />
+    <Compile Remove="TvMaze.Domain\Repositories\IShowRepository.cs" />
+  </ItemGroup>
+</Project>
