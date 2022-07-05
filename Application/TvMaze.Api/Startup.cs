@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TvMaze.Data.Contexts;
+
 namespace TvMaze.Api;
 
 public class Startup
@@ -41,6 +44,12 @@ public class Startup
         else
         {
             app.UseExceptionHandler("/Error");
+        }
+
+        using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ShowContext>();
+            context.Database.EnsureCreated();
         }
 
         app.UseStaticFiles();
