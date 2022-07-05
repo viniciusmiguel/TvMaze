@@ -5,5 +5,4 @@ Sample Project that ingests show and cast data from TvMaze API and provides a si
 The API is available at: https://tvmazescraper.azurewebsites.net/
 
 ## License:
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 See [LICENSE](LICENSE).
