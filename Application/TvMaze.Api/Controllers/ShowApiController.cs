@@ -1,6 +1,5 @@
 ﻿namespace TvMaze.Api.Controllers;
 
-[Authorize]
 public class ShowApiController : ControllerBase
 {
     private readonly IShowAppService _showAppService;
@@ -14,6 +13,7 @@ public class ShowApiController : ControllerBase
 
     [HttpGet]
     [Route("api/shows")]
+    [AllowAnonymous]
     public async Task<IActionResult> Get()
     {
         return Response(await _showAppService.GetAllShowsAndActors());

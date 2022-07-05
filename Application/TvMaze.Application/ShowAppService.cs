@@ -46,7 +46,7 @@ public class ShowAppService : IShowAppService
 
         if (actor is object) return;
 
-        var cmd = new AddActorCommand(actorName, birthday);
+        var cmd = new AddActorCommand(actorName, birthday, showDomainId);
         await _mediator.Send(cmd);
 
         return;

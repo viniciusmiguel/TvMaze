@@ -17,6 +17,7 @@ public class Worker : BackgroundService
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly MessageHandler _messageHandler;
     private readonly DomainNotificationHandler _notifications;
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<Tuple<string, int>,ActorDto> _actors;
     public Worker(ILogger<Worker> logger, ISettingsReader settingsReader, IShowAppService showAppService,
         INotificationHandler<DomainNotification> notifications)
     {
@@ -27,6 +28,7 @@ public class Worker : BackgroundService
         _httpClient = new HttpClient(_messageHandler);
         _notifications = (DomainNotificationHandler) notifications;
         _cancellationTokenSource = new CancellationTokenSource();
+        _actors =new System.Collections.Concurrent.ConcurrentDictionary<Tuple<string, int>, ActorDto>();
     }
 
     public override Task StopAsync(CancellationToken cancellationToken)
@@ -49,25 +51,37 @@ public class Worker : BackgroundService
 
             await shows.ParallelForEachAsync(async (show) => {
 
-                var showDomainId = await _showAppService.LocateOrCreateShow(show.name, cancellationToken);
-
                 var actors = await GetActorsByShowId(show.id, cancellationToken);
 
                 if (actors is null) return;
 
+                int i = 0;
                 foreach(var actor in actors)
                 {
-                    await _showAppService.IncludeActorIfNotExists(showDomainId, actor.person.name,DateOnly.Parse(actor.person.birthday), cancellationToken);
+                    _actors.TryAdd(new Tuple<string, int>(show.name, i), actor);
+                    i++;
                 }
 
-                if(_notifications.HasNotifications())
+            }, Environment.ProcessorCount);
+
+            //Needs to be sync since DbContext does not support parallel queries on a single context.
+            //This is a limitation of EFCore/SqlServerClient
+            foreach(var kvPair in _actors)
+            {
+                var showDomainId = await _showAppService.LocateOrCreateShow(kvPair.Key.Item1, cancellationToken);
+                if(DateOnly.TryParse(kvPair.Value.person.birthday, out DateOnly result))
                 {
-                    _logger.LogWarning("Domain Notifications generated while processing show: " + show.name);
+                    await _showAppService.IncludeActorIfNotExists(showDomainId, kvPair.Value.person.name, result, cancellationToken);
+                }
+                
+                if (_notifications.HasNotifications())
+                {
+                    _logger.LogWarning("Domain Notifications generated while processing show: " + kvPair.Key.Item1);
                     foreach (var n in _notifications.GetNotifications())
                         _logger.LogWarning(n.Key + " : " + n.Value);
                 }
 
-            }, Environment.ProcessorCount);
+            }
 
             stopWatch.Stop();
 

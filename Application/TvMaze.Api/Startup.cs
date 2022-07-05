@@ -1,4 +1,7 @@
-using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using TvMaze.Data.Contexts;
 
 namespace TvMaze.Api;
@@ -20,6 +23,10 @@ public class Startup
             options.MinimumSameSitePolicy = SameSiteMode.None;
         });
 
+        services.Configure<JsonOptions>(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new DateOnlyConverter());
+        });
         services.AddMvc(op => op.EnableEndpointRouting = false);
 
         services.AddSwaggerGen(c =>
@@ -33,6 +40,7 @@ public class Startup
         });
 
         NativeInjector.InjectServicesForApi(services, Configuration["SqlConnectionString"]);
+        services.AddMediatR(typeof(Startup));
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -60,7 +68,7 @@ public class Startup
         {
             routes.MapRoute(
                 name: "default",
-                template: "{controller=Show}/{action=Get}");
+                template: "{controller=Shows}/{action=Get}");
         });
 
         app.UseSwagger();
@@ -68,5 +76,37 @@ public class Startup
         {
             s.SwaggerEndpoint("/swagger/v1/swagger.json", "TvMaze API v1.0");
         });
+    }
+    internal sealed class DateOnlyConverter : JsonConverter<DateOnly>
+    {
+        private const int DateOnlyIsoFormatLength = 10; // YYYY-MM-DD
+
+        public override DateOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            DateTime dateTime = reader.GetDateTime();
+            return DateOnly.FromDateTime(dateTime);
+        }
+
+        public override void Write(Utf8JsonWriter writer, DateOnly value, JsonSerializerOptions options)
+        {
+            Span<char> buffer = stackalloc char[DateOnlyIsoFormatLength];
+            bool formattedSuccessfully = value.TryFormat(buffer, out int charsWritten, "O", CultureInfo.InvariantCulture);
+            Debug.Assert(formattedSuccessfully && charsWritten == DateOnlyIsoFormatLength);
+            writer.WriteStringValue(buffer);
+        }
+
+        internal  DateOnly ReadAsPropertyNameCore(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            DateTime dateTime = reader.GetDateTime();
+            return DateOnly.FromDateTime(dateTime);
+        }
+
+        internal  void WriteAsPropertyNameCore(Utf8JsonWriter writer, DateOnly value, JsonSerializerOptions options, bool isWritingExtensionDataProperty)
+        {
+            Span<char> buffer = stackalloc char[DateOnlyIsoFormatLength];
+            bool formattedSuccessfully = value.TryFormat(buffer, out int charsWritten, "O", CultureInfo.InvariantCulture);
+            Debug.Assert(formattedSuccessfully && charsWritten == DateOnlyIsoFormatLength);
+            writer.WritePropertyName(buffer);
+        }
     }
 }

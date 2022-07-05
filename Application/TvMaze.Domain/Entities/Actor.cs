@@ -8,6 +8,7 @@ namespace TvMaze.Domain.Entities
         public DateOnly BirthDay { get; private set; }
         //EF Rel.
         public Show Show { get; protected set; }
+		protected Actor() { }
 
         public Actor(string name, DateOnly birthday, Guid showId, Guid? id = null)
 		{

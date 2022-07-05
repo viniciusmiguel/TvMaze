@@ -18,7 +18,8 @@ public class ActorMapping : IEntityTypeConfiguration<Actor>
             .HasColumnType("varchar(250)");
 
         builder.Property(a => a.BirthDay)
-            .IsRequired();
+            .IsRequired()
+            .HasConversion<DateOnlyConverter, DateOnlyComparer>();
 
         builder.HasOne(a => a.Show)
             .WithMany(s => s.Cast);

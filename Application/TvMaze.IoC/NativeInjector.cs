@@ -17,8 +17,8 @@ public class NativeInjector
 	public static void InjectServicesForApi(IServiceCollection services, string ConnectionString)
 	{
 		//Configuration
-		services.AddSingleton<IConfigurationSettingsSource, ConfigurationExtensionsSource>();
-		services.AddSingleton<ISettingsReader, SettingsReader>();
+		services.AddScoped<IConfigurationSettingsSource, ConfigurationExtensionsSource>();
+		services.AddScoped<ISettingsReader, SettingsReader>();
 
 		//Domain Notifications
 		services.AddScoped<INotificationHandler<DomainNotification>, DomainNotificationHandler>();
@@ -28,7 +28,9 @@ public class NativeInjector
 		services.AddScoped<IShowRepository, ShowRepository>();
 		services.AddScoped<ShowContext>();
 		services.AddDbContext<ShowContext>(options =>
-					options.UseSqlServer(ConnectionString));
+					{
+						options.UseSqlServer(ConnectionString);
+					});
 		services.AddScoped<IRequestHandler<AddShowCommand, bool>, AddShowCommandHandler>();
 		services.AddScoped<IRequestHandler<AddActorCommand, bool>, AddActorCommandHandler>();
 
@@ -49,7 +51,7 @@ public class NativeInjector
 		services.AddSingleton<IShowRepository, ShowRepository>();
 		services.AddSingleton<ShowContext>();
 		services.AddDbContext<ShowContext>(options =>
-			options.UseSqlServer(ConnectionString));
+			options.UseSqlServer(ConnectionString), ServiceLifetime.Singleton);
 		services.AddSingleton<IRequestHandler<AddShowCommand, bool>, AddShowCommandHandler>();
 		services.AddSingleton<IRequestHandler<AddActorCommand, bool>, AddActorCommandHandler>();
 	}

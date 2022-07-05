@@ -5,10 +5,12 @@ namespace TvMaze.Domain.Commands
 	{
         public string Name { get; private set; }
         public DateOnly BirthDay { get; private set; }
-        public AddActorCommand(string name, DateOnly birthday)
+        public Guid ShowId { get; private set; }
+        public AddActorCommand(string name, DateOnly birthday, Guid showId)
 		{
             Name = name;
             BirthDay = birthday;
+            ShowId = showId;
 		}
 
         public override bool IsValid()

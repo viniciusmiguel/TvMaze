@@ -3,6 +3,10 @@
 public class Show : Entity, IAggregateRoot
 {
     public string Name { get; private set; }
+
+    //Ctor for EFCore
+    protected Show() { }
+
     public Show(string name, Guid? id = null)
 	{
         Name = name;

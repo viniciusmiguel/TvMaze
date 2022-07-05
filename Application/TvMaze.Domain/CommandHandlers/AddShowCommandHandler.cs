@@ -12,8 +12,18 @@ public class AddShowCommandHandler : IRequestHandler<AddShowCommand, bool>
 
     public async Task<bool> Handle(AddShowCommand cmd, CancellationToken cancellationToken)
     {
-        if (ValidateCommand(cmd)) return false;
+        if (!ValidateCommand(cmd)) return false;
 
+        var existingShow = await _showRepository.GetShowByName(cmd.Name);
+
+        if(existingShow is object)
+        {
+            return false;
+        }
+
+        var show = new Show(cmd.Name);
+
+        await _showRepository.Add(show);
 
         return true;
     }

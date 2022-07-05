@@ -33,7 +33,7 @@ public class ShowRepository : IShowRepository
                             .AsNoTracking()
                             .FirstOrDefaultAsync(a =>
                                 a.ShowId.Equals(showDomainId) &&
-                                a.Name.Equals(actorName, StringComparison.InvariantCultureIgnoreCase));
+                                a.Name.Equals(actorName));
     }
 
     public async Task<IEnumerable<Show>> GetAll()
@@ -51,7 +51,7 @@ public class ShowRepository : IShowRepository
         var result = await _showContext
             .Shows
             .AsNoTracking()
-            .Where(s => s.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+            .Where(s => s.Name.Equals(name))
             .Include(s => s.Cast)
             .FirstOrDefaultAsync();
 
