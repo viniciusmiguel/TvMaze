@@ -7,8 +7,8 @@ on:
 
 env:
   AZURE_WEBAPP_NAME: "TvMazeScraper"    # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: '.'             # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '3.1.302'                  # set this to the dot net version to use
+  AZURE_WEBAPP_PACKAGE_PATH: '.'        # set this to the path to your web app project, defaults to the repository root
+  DOTNET_VERSION: '6.0'                 # set this to the dot net version to use
   RESOURCEGROUPNAME: "vinislab-rg-tvmaze"
   LOCATION: "West Europe"
   HOSTINGPLANNAME: "TvMazeScraper-plan"
@@ -32,15 +32,15 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{ env.DOTNET_VERSION }} 
-    
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
     # Run dotnet build and publish
     - name: dotnet build unit test and publish
       run: |
         cd Application
         dotnet restore
         dotnet build --configuration Release
-       # dotnet test aspnet-core-dotnet-core.UnitTests/aspnet-core-dotnet-core.UnitTests.csproj
+        dotnet test TvMaze.UnitTests/TvMaze.UnitTests.csproj
         dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/build'
 
     - name: Archive Application
@@ -129,7 +129,7 @@ jobs:
    # - name: update web app url in Run Settings
     #  shell: powershell
      # run: |
-      #  cd Application\aspnet-core-dotnet-core.FunctionalTests
+      #  cd Application\TvMaze.FunctionalTests
        # [xml]$runSetting = Get-Content functionalTests.runsettings
         #$runSetting.RunSettings.TestRunParameters.ChildNodes.Item(0).value = 'https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/'
         #$runSetting.Save("$(pwd)/functionalTests.runsettings")
@@ -137,5 +137,5 @@ jobs:
     #- name: Run tests
      # continue-on-error: false
       #run: |
-       # cd Application\aspnet-core-dotnet-core.FunctionalTests
-        #dotnet test aspnet-core-dotnet-core.FunctionalTests.csproj -s functionalTests.runsettings
+       # cd Application\TvMaze.FunctionalTests
+        #dotnet test TvMaze.FunctionalTests.csproj -s functionalTests.runsettings
