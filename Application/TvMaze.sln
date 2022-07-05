@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvMaze.UnitTests", "TvMaze.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvMaze.FunctionalTests", "TvMaze.FunctionalTests\TvMaze.FunctionalTests.csproj", "{D6902CA6-4C33-4EB0-95BB-F49E513B66A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvMaze.Api", "TvMaze.Api\TVMaze.Api.csproj", "{C8479515-FA97-47A7-B69B-9B10CA618D68}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvMaze.Api", "TvMaze.Api\TvMaze.Api.csproj", "{C8479515-FA97-47A7-B69B-9B10CA618D68}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Application", "1 - Application", "{899E0EB8-B969-4915-8DD1-B22443DC771D}"
 EndProject
