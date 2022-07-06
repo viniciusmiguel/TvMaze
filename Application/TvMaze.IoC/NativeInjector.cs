@@ -14,7 +14,7 @@ namespace TvMaze.IoC;
 
 public class NativeInjector
 {
-	public static void InjectServicesForApi(IServiceCollection services, string ConnectionString)
+	public static void InjectServicesForApi(IServiceCollection services)
 	{
 		//Configuration
 		services.AddScoped<IConfigurationSettingsSource, ConfigurationExtensionsSource>();
@@ -27,17 +27,13 @@ public class NativeInjector
 		services.AddScoped<IShowAppService, ShowAppService>();
 		services.AddScoped<IShowRepository, ShowRepository>();
 		services.AddScoped<ShowContext>();
-		services.AddDbContext<ShowContext>(options =>
-					{
-						options.UseSqlServer(ConnectionString);
-					});
 		services.AddScoped<IRequestHandler<AddShowCommand, bool>, AddShowCommandHandler>();
 		services.AddScoped<IRequestHandler<AddActorCommand, bool>, AddActorCommandHandler>();
 
 		
 	}
 
-	public static void InjectServicesForDaemon(IServiceCollection services, string ConnectionString)
+	public static void InjectServicesForDaemon(IServiceCollection services)
 	{
 		//Configuration
 		services.AddSingleton<IConfigurationSettingsSource, ConfigurationExtensionsSource>();
@@ -50,8 +46,6 @@ public class NativeInjector
 		services.AddSingleton<IShowAppService, ShowAppService>();
 		services.AddSingleton<IShowRepository, ShowRepository>();
 		services.AddSingleton<ShowContext>();
-		services.AddDbContext<ShowContext>(options =>
-			options.UseSqlServer(ConnectionString), ServiceLifetime.Singleton);
 		services.AddSingleton<IRequestHandler<AddShowCommand, bool>, AddShowCommandHandler>();
 		services.AddSingleton<IRequestHandler<AddActorCommand, bool>, AddActorCommandHandler>();
 	}

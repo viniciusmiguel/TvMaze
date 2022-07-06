@@ -14,7 +14,6 @@ public class Worker : BackgroundService
     private readonly IShowAppService _showAppService;
     private readonly string _showsUri;
     private readonly HttpClient _httpClient;
-    private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly MessageHandler _messageHandler;
     private readonly DomainNotificationHandler _notifications;
     private readonly System.Collections.Concurrent.ConcurrentDictionary<Tuple<string, int>,ActorDto> _actors;
@@ -27,16 +26,9 @@ public class Worker : BackgroundService
         _messageHandler = new MessageHandler(_logger);
         _httpClient = new HttpClient(_messageHandler);
         _notifications = (DomainNotificationHandler) notifications;
-        _cancellationTokenSource = new CancellationTokenSource();
-        _actors =new System.Collections.Concurrent.ConcurrentDictionary<Tuple<string, int>, ActorDto>();
+        _actors = new System.Collections.Concurrent.ConcurrentDictionary<Tuple<string, int>, ActorDto>();
     }
 
-    public override Task StopAsync(CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("Service stopping requested at: {time}", DateTimeOffset.Now);
-        _cancellationTokenSource.Cancel();
-        return base.StopAsync(cancellationToken);
-    }
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -85,9 +77,10 @@ public class Worker : BackgroundService
 
             stopWatch.Stop();
 
+            _actors.Clear();
             _logger.LogInformation("Shows Ingester Finished: {time}",stopWatch.Elapsed);
 
-            await Task.Delay(TimeSpan.FromMinutes(10), cancellationToken);
+            await Task.Delay(TimeSpan.FromMinutes(60), cancellationToken);
         }
     }
 

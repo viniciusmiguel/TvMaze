@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvMaze.UnitTests", "TvMaze.UnitTests\TvMaze.UnitTests.csproj", "{DA840935-6753-4A08-9045-A82BDF6FAA95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TvMaze.UnitTests", "TvMaze.UnitTests\TvMaze.UnitTests.csproj", "{DA840935-6753-4A08-9045-A82BDF6FAA95}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TvMaze.FunctionalTests", "TvMaze.FunctionalTests\TvMaze.FunctionalTests.csproj", "{D6902CA6-4C33-4EB0-95BB-F49E513B66A8}"
 EndProject

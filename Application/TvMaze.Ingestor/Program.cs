@@ -1,23 +1,20 @@
 ﻿using TvMaze.Ingestor;
 using TvMaze.IoC;
 using MediatR;
-
-var config = new ConfigurationBuilder()
-    .AddEnvironmentVariables()
-    .AddCommandLine(args)
-    .AddJsonFile("appsettings.json")
-    .Build();
+using Serilog;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
-        
-        services.AddLogging();
         services.AddHostedService<Worker>();
-        NativeInjector.InjectServicesForDaemon(services, config["SqlConnectionString"]);
+        NativeInjector.InjectServicesForDaemon(services);
         services.AddMediatR(typeof(Program));
 
-    }).ConfigureLogging((c, b) => b.AddConsole())
+    }).UseSerilog((a,b)=> {
+        b.MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information);
+        b.WriteTo.Console();
+        b.Enrich.FromLogContext();
+    })
       .UseConsoleLifetime()
       .Build();
 

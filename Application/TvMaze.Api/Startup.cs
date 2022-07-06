@@ -39,7 +39,7 @@ public class Startup
             });
         });
 
-        NativeInjector.InjectServicesForApi(services, Configuration["SqlConnectionString"]);
+        NativeInjector.InjectServicesForApi(services);
         services.AddMediatR(typeof(Startup));
     }
 
