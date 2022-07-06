@@ -6,7 +6,9 @@ public class ShowApiController : ControllerBase
 
     public ShowApiController(INotificationHandler<DomainNotification> notifications,
                              IShowAppService showAppService,
-                             IMediator mediatorHandler) : base(notifications, mediatorHandler)
+                             IMediator mediatorHandler,
+                             IUriService uriService)
+        : base(notifications, mediatorHandler, uriService)
     {
         _showAppService = showAppService;
 	}
@@ -14,9 +16,12 @@ public class ShowApiController : ControllerBase
     [HttpGet]
     [Route("api/shows")]
     [AllowAnonymous]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get([FromQuery] PaginationFilter filter)
     {
-        return Response(await _showAppService.GetAllShowsAndActors());
+        var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+        var route = Request.Path.Value;
+        var total = await _showAppService.GetNumberOfShows();
+        return PagedResponse<IEnumerable<ShowViewModel>>(await _showAppService.GetAllShowsAndActors(filter.PageNumber, filter.PageSize),validFilter,total,route);
     }
 }
 

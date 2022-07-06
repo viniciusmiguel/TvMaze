@@ -30,32 +30,35 @@ public class ShowRepository : IShowRepository
     public async Task<Actor?> GetActorByShowIdAndActorName(Guid showDomainId, string actorName)
     {
         return await _showContext.Actors
-                            .AsNoTracking()
-                            .FirstOrDefaultAsync(a =>
-                                a.ShowId.Equals(showDomainId) &&
-                                a.Name.Equals(actorName));
-    }
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(a =>
+                            a.ShowId.Equals(showDomainId) &&
+                            a.Name.Equals(actorName));
+}
 
-    public async Task<IEnumerable<Show>> GetAll()
+    public async Task<IEnumerable<Show>> GetAll(int pageNumber, int pageSize)
     {
-        var shows = await _showContext.Shows
+        return await _showContext.Shows
                         .AsNoTracking()
                         .Include(show => show.Cast)
+                        .Skip((pageNumber -1)* pageSize)
+                        .Take(pageSize)
                         .ToListAsync();
+    }
 
-        return shows; 
+    public async Task<int> CountShows()
+    {
+        return  await _showContext.Shows.CountAsync();
     }
 
     public async Task<Show?> GetShowByName(string name)
     {
-        var result = await _showContext
-            .Shows
-            .AsNoTracking()
-            .Where(s => s.Name.Equals(name))
-            .Include(s => s.Cast)
-            .FirstOrDefaultAsync();
-
-        return result;
+        return await _showContext
+                        .Shows
+                        .AsNoTracking()
+                        .Where(s => s.Name.Equals(name))
+                        .Include(s => s.Cast)
+                        .FirstOrDefaultAsync();
     }
 
 

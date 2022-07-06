@@ -10,10 +10,13 @@ public class ShowAppService : IShowAppService
         _showRepository = showRepository;
         _mediator = mediator;
 	}
-
-    public async Task<IEnumerable<ShowViewModel>?> GetAllShowsAndActors()
+    public async Task<int> GetNumberOfShows()
     {
-        var shows = await _showRepository.GetAll();
+        return await _showRepository.CountShows();
+    }
+    public async Task<IEnumerable<ShowViewModel>?> GetAllShowsAndActors(int pageNumber, int pageSize)
+    {
+        var shows = await _showRepository.GetAll(pageNumber, pageSize);
 
         if (shows is null || !shows.Any()) return null;
 

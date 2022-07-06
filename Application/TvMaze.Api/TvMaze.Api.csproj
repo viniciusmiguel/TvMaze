@@ -36,4 +36,8 @@
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\css\site.min.css" />
+    <Content Remove="wwwroot\js\site.min.js" />
+  </ItemGroup>
 </Project>
