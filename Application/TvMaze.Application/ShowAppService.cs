@@ -35,6 +35,7 @@ public class ShowAppService : IShowAppService
             }
             showVieModels.Add(new ShowViewModel()
             {
+                Id = show.Id,
                 Name = show.Name,
                 Cast = actors
             });
